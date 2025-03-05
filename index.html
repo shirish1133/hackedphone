@@ -33,18 +33,8 @@
             display: none;
         }
 
-        #passwordContainer,
-        #fingerprint {
-            display: none;
+        #passwordContainer {
             margin-top: 20px;
-        }
-
-        #passwordInput {
-            padding: 10px;
-            font-size: 16px;
-            background: black;
-            color: limegreen;
-            border: 2px solid limegreen;
         }
 
         #submitBtn {
@@ -56,13 +46,8 @@
             cursor: pointer;
         }
 
-        #fingerprint img {
-            width: 100px;
-            cursor: pointer;
-            animation: glow 1s infinite alternate;
-        }
-
-        #reveal, #goodbye {
+        #reveal,
+        #goodbye {
             display: none;
             font-size: 24px;
             color: yellow;
@@ -72,11 +57,11 @@
 
         #hackerVideo {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-color: black;
             overflow: hidden;
             z-index: 10;
@@ -89,7 +74,8 @@
         }
 
         @keyframes bounce {
-            0%, 100% {
+            0%,
+            100% {
                 transform: translateY(0);
             }
             50% {
@@ -106,14 +92,7 @@
     <p id="warning">🔴 CRITICAL ERROR! Unauthorized access detected!</p>
 
     <div id="passwordContainer">
-        <p>Enter Admin Password to Stop the Attack:</p>
-        <input type="password" id="passwordInput" placeholder="Enter Password">
         <button id="submitBtn">Unlock System</button>
-    </div>
-
-    <div id="fingerprint">
-        <p>Scan fingerprint to authenticate</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Fingerprint_picture.svg" alt="Fingerprint Scanner" id="fingerprintImg">
     </div>
 
     <h1 id="reveal">🎉 SURPRISE! HAPPY BIRTHDAY, Uttam Sir! 🎂</h1>
@@ -135,7 +114,7 @@
             "[FIREWALL BYPASSED] Security override initiated...",
             "[DATA SCAN STARTED] Extracting sensitive files...",
             "[PASSWORD CRACKED] Decrypting user credentials...",
-            "[VICTIM FOUND] Name: Uttam Khastar",
+            "[VICTIM FOUND] Name: Uttam",
             "[DATE OF BIRTH DETECTED] DOB: TODAY!",
             "[ALERT] SYSTEM LOCKDOWN IMMINENT!",
             "[ERROR] SYSTEM REQUIRES ADMIN PASSWORD!"
@@ -149,30 +128,27 @@
                 setTimeout(typeMessage, 1000);
             } else {
                 document.getElementById("warning").style.display = "block";
-                document.getElementById("passwordContainer").style.display = "block";
             }
         }
 
-        document.getElementById("submitBtn").addEventListener("click", function () {
+        document.getElementById("submitBtn").addEventListener("click", function() {
             document.getElementById("passwordContainer").style.display = "none";
-            document.getElementById("fingerprint").style.display = "block";
-        });
-
-        document.getElementById("fingerprintImg").addEventListener("click", function () {
-            document.getElementById("fingerprint").innerHTML = "<p>Verifying identity...</p>";
-            setTimeout(() => {
-                document.getElementById("reveal").style.display = "block";
-                document.getElementById("hackerVideo").style.display = 'block';
-                document.getElementById("video").play();
-                document.getElementById("music").play();
-                playHackerVoice();
-            }, 3000);
+            document.getElementById("reveal").style.display = "block";
+            document.getElementById("hackerVideo").style.display = 'block';
+            document.getElementById("video").play();
+            document.getElementById("music").play();
+            playHackerVoice();
         });
 
         function playHackerVoice() {
-            const msg = new SpeechSynthesisUtterance("Hello Uttam Sir, how have you been lately? I am just here to wish you a happy birthday. Hope you liked this little surprise! Wishing you a Happy Birthday! Thank you for being awesome!");
+            const msg = new SpeechSynthesisUtterance(
+                "Hello Uttam Sir, how have you been lately? I am just here to wish you a happy birthday. Hope you liked this little surprise! Wishing you a Happy Birthday! Thank you for being awesome!"
+            );
+
             msg.rate = 0.9;
-            msg.pitch = 1.2;
+            msg.pitch = 1.0;
+            msg.voice = speechSynthesis.getVoices().find(voice => voice.name.includes("Male")) || speechSynthesis.getVoices()[0];
+
             msg.onend = function() {
                 document.getElementById("video").pause();
                 document.getElementById("music").pause();
@@ -180,10 +156,16 @@
                 document.getElementById("reveal").style.display = "none";
                 document.getElementById("goodbye").style.display = "block";
             };
+
             speechSynthesis.speak(msg);
         }
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            playHackerVoice();
+        };
 
         typeMessage();
     </script>
 </body>
+
 </html>
