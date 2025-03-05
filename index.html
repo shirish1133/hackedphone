@@ -62,7 +62,7 @@
             animation: glow 1s infinite alternate;
         }
 
-        #reveal {
+        #reveal, #goodbye {
             display: none;
             font-size: 24px;
             color: yellow;
@@ -70,82 +70,36 @@
             animation: bounce 1s infinite;
         }
 
-        @keyframes glitch {
-            0% {
-                text-shadow: 2px 2px red;
-            }
-
-            25% {
-                text-shadow: -2px -2px blue;
-            }
-
-            50% {
-                text-shadow: 2px -2px yellow;
-            }
-
-            75% {
-                text-shadow: -2px 2px cyan;
-            }
-
-            100% {
-                text-shadow: 2px 2px limegreen;
-            }
+        #hackerVideo {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            overflow: hidden;
+            z-index: 10;
         }
 
-        .glitch {
-            animation: glitch 0.2s infinite;
+        #hackerVideo video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         @keyframes bounce {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0);
             }
-
             50% {
                 transform: translateY(-10px);
             }
-        }
-
-        @keyframes glow {
-            0% {
-                opacity: 0.6;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            50% {
-                transform: translateX(5px);
-            }
-
-            75% {
-                transform: translateX(-5px);
-            }
-        }
-
-        .shake {
-            animation: shake 0.2s 3;
         }
     </style>
 </head>
 
 <body>
-
     <h1 class="glitch">⚠️ SYSTEM BREACH DETECTED ⚠️</h1>
     <div id="terminal"></div>
 
@@ -159,14 +113,19 @@
 
     <div id="fingerprint">
         <p>Scan fingerprint to authenticate</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Fingerprint_picture.svg" alt="Fingerprint Scanner"
-            id="fingerprintImg">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Fingerprint_picture.svg" alt="Fingerprint Scanner" id="fingerprintImg">
     </div>
 
-    <h1 id="reveal">🎉 SURPRISE! HAPPY BIRTHDAY, Shrikant Sir! 🎂</h1>
+    <h1 id="reveal">🎉 SURPRISE! HAPPY BIRTHDAY, Uttam Sir! 🎂</h1>
+    <h1 id="goodbye">Goodbye! 🎭</h1>
 
-    <audio id="voiceMessage"
-        src="https://api.voicerss.org/?key=YOUR_API_KEY&hl=en-us&src=WARNING!%20You%20are%20being%20hacked...%20just%20kidding!%20Happy%20Birthday!"></audio>
+    <div id="hackerVideo">
+        <video id="video" autoplay>
+            <source src="1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
     <audio id="music" src="https://www.myinstants.com/media/sounds/happy-birthday-song.mp3"></audio>
 
     <script>
@@ -176,7 +135,7 @@
             "[FIREWALL BYPASSED] Security override initiated...",
             "[DATA SCAN STARTED] Extracting sensitive files...",
             "[PASSWORD CRACKED] Decrypting user credentials...",
-            "[VICTIM FOUND] Name: Shrikant",
+            "[VICTIM FOUND] Name: Uttam Khastar",
             "[DATE OF BIRTH DETECTED] DOB: TODAY!",
             "[ALERT] SYSTEM LOCKDOWN IMMINENT!",
             "[ERROR] SYSTEM REQUIRES ADMIN PASSWORD!"
@@ -195,48 +154,36 @@
         }
 
         document.getElementById("submitBtn").addEventListener("click", function () {
-            document.body.classList.add("shake");
-            setTimeout(() => {
-                document.body.classList.remove("shake");
-                document.getElementById("terminal").innerHTML = "[SYSTEM FAILURE] Password authentication failed!<br>";
-                document.getElementById("warning").innerText = "🚨 SECURITY BREACH LEVEL 2 🚨";
-                document.getElementById("passwordContainer").style.display = "none";
-                document.getElementById("fingerprint").style.display = "block";
-            }, 2000);
+            document.getElementById("passwordContainer").style.display = "none";
+            document.getElementById("fingerprint").style.display = "block";
         });
 
         document.getElementById("fingerprintImg").addEventListener("click", function () {
             document.getElementById("fingerprint").innerHTML = "<p>Verifying identity...</p>";
             setTimeout(() => {
-                document.getElementById("terminal").innerHTML = "";
-                let revealMessages = [
-                    "[DECRYPTING FILES...]",
-                    "[RECOVERING DATA...]",
-                    "[FILE UNLOCKED: SECRET_MESSAGE.txt]",
-                    "🎉 SURPRISE! HAPPY BIRTHDAY,Shrikant Sir! 🎂",
-                    "🎊 Wishing you happiness, success, and endless fun! 🥳",
-                    "💻 Hope you loved this little coding surprise!"
-                ];
-
-                let j = 0;
-                function revealMessage() {
-                    if (j < revealMessages.length) {
-                        document.getElementById("terminal").innerHTML += revealMessages[j] + "<br>";
-                        j++;
-                        setTimeout(revealMessage, 1000);
-                    } else {
-                        document.getElementById("reveal").style.display = "block";
-                        document.getElementById("music").play();
-                        document.getElementById("voiceMessage").play();
-                    }
-                }
-                revealMessage();
+                document.getElementById("reveal").style.display = "block";
+                document.getElementById("hackerVideo").style.display = 'block';
+                document.getElementById("video").play();
+                document.getElementById("music").play();
+                playHackerVoice();
             }, 3000);
         });
 
+        function playHackerVoice() {
+            const msg = new SpeechSynthesisUtterance("Hello Uttam Sir, how have you been lately? I am just here to wish you a happy birthday. Hope you liked this little surprise! Wishing you a Happy Birthday! Thank you for being awesome!");
+            msg.rate = 0.9;
+            msg.pitch = 1.2;
+            msg.onend = function() {
+                document.getElementById("video").pause();
+                document.getElementById("music").pause();
+                document.getElementById("hackerVideo").style.display = "none";
+                document.getElementById("reveal").style.display = "none";
+                document.getElementById("goodbye").style.display = "block";
+            };
+            speechSynthesis.speak(msg);
+        }
+
         typeMessage();
     </script>
-
 </body>
-
 </html>
